@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:ESP32BLE" x:Class="ESP32BLE.MainPage">
+    <StackLayout>
+        <StackLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0"></On>
+            </OnPlatform>
+        </StackLayout.Margin>
+        
+        <!-- Place new controls here -->
+        <Label x:Name="lblTitolo" Text="Welcome to BLE Client for ESP32" HorizontalOptions="Center" VerticalOptions="Start" />
+        
+        <Button x:Name="btnConnect" Text="Connect" Clicked="btnConnect_Clicked"/>
+        <Button x:Name="btnDisconnect" IsEnabled="false" Text="Disconnect" Clicked="btnDisconnect_Clicked"/>
+        <Slider x:Name="slValore" Minimum="0" Maximum="100"/>
+    </StackLayout>
+</ContentPage>
