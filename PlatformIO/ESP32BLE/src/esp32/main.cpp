@@ -138,7 +138,7 @@ class ButtonValueCallbacks: public BLECharacteristicCallbacks {
 
 void setup() {
 
-  // Usaimo tre led di cui uno PWM e un pulsante 
+  // Usiamo tre led di cui uno PWM e un pulsante 
   pinMode( ESP32_BUILTIN, OUTPUT );
   pinMode( LED_ROSSO, OUTPUT );
 
@@ -146,7 +146,7 @@ void setup() {
   
   // In ESP32 analogWrite non c'è
   // Ci sono 16 canali PWM e vanno inizializzati
-  // Qui inizializzo a 5KHz/bit il canale 0
+  // Qui inizializzo a 5KHz/8bit il canale 0
   #if defined(ARDUINO_ARCH_ESP32)
 		ledcAttachPin(LED_BLU, 0);
   	ledcSetup(0, 5000, 8);
