@@ -26,17 +26,6 @@ https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/
 
 void Debounce( void );
 
-// Define per mappare i connettori Grove su ESP8266
-#define ESP_D2 16
-#define ESP_D3 5
-#define ESP_D4 4
-#define ESP_D5 0
-#define ESP_D6 2
-#define ESP_BUILTIN ESP_D6
-#define ESP_D7 14
-#define ESP_D8 12
-#define ESP_D9 13
-
 // Define per mappare i connettori Grove su ESP32
 #define ESP32_D2 26
 #define ESP32_D3 25
