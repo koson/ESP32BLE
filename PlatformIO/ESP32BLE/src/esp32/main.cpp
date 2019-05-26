@@ -215,13 +215,14 @@ void loop() {
   // Tick!
   if ( deviceConnected ) {
     
-    // Le notifiche BLE ogni 100 mS.      
+    // Le notifiche BLE ogni 100 mS (BLE_NOTIFY_UPDATE_TIME)  
     if( millis() > prossimoTick ) {
 
-      // Tempo scaduto.
-      // Sono passati altri BLE_NOTIFY_UPDATE_TIME ms
+      // Tempo scaduto, sono passati altri BLE_NOTIFY_UPDATE_TIME ms
+      // Ricarichiamo il timer della stufa...
       prossimoTick = millis() + BLE_NOTIFY_UPDATE_TIME;
     
+      // Il led dell'ESP lo faccio blinkare per segnalare che siamo connessi...
       stato = !stato;
       digitalWrite( ESP32_BUILTIN, stato );
 
@@ -246,24 +247,6 @@ void loop() {
         Serial.println(localButtonValue);
       }
     }
-
-    /* Gestione della notifica  
-    try
-    {
-        // Inizializzazione
-        IDisposable notifyHandler = GattServer.NotifyCharacteristicValue(
-            serviceGuid, charGuid,
-            bytes => {
-                var intValue2 = BitConverter.ToInt32(bytes, 0);
-                Debug.WriteLine(intValue2);
-            });
-        
-        // Alla fine ricordarsi di chiudere tutto...
-        notifyHandler.Dispose();
-    }
-    catch (GattException ex) { Debug.WriteLine(ex.ToString()); }
-    ****/
-
   }
   else
   {
