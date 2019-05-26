@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+      xmlns="http://xamarin.com/schemas/2014/forms" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+      x:Class="ESP32BLE.BLEPage">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.5*"/>
+        </Grid.RowDefinitions>
+
+        <Image Source="PuzzleConnesso.jpg" Aspect="AspectFill" />
+                
+        <StackLayout Grid.Row="1">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Label x:Name="lblTitolo" 
+                    Text="--" 
+                    HorizontalOptions="Center" VerticalOptions="StartAndExpand" 
+                    FontSize="30" />
+                
+                <Label x:Name="lblStatoConnesso" 
+                    Text="*" 
+                    HorizontalOptions="Center" VerticalOptions="StartAndExpand" 
+                    FontSize="40" />
+                </StackLayout>
+            
+            <Switch x:Name="swESP32" 
+                    VerticalOptions="StartAndExpand"
+                    IsEnabled="false" 
+            />
+            
+            <Slider x:Name="slValore" 
+                    Grid.Row="1" Value="5"
+                    VerticalOptions="StartAndExpand"
+                    WidthRequest="100" 
+                    Minimum="0" Maximum="100"
+            />
+            
+            <Label 
+                BindingContext="{x:Reference Name=slValore}" 
+                Text="{Binding Path=Value, StringFormat='{0:0}'}"                
+                
+                FontSize="30" 
+                HorizontalOptions="Center" 
+                VerticalOptions="StartAndExpand"
+            />
+            
+            <Button 
+                Text="DISCONNECT" 
+                Clicked="btnDisconnect_Clicked"
+
+                Grid.Row="1"
+                HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand"
+                WidthRequest="200" Margin="5"
+
+                TextColor="Black" FontSize="Large" 
+                BackgroundColor="Silver" Opacity="0.7"
+                
+                BorderColor="Black" BorderWidth="0.5" CornerRadius="10"
+            />                
+            
+        </StackLayout>
+    </Grid>
+</ContentPage>

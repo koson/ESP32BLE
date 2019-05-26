@@ -1,17 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:ESP32BLE" x:Class="ESP32BLE.MainPage">
-    <StackLayout>
-        <StackLayout.Margin>
-            <OnPlatform x:TypeArguments="Thickness">
-                <On Platform="iOS" Value="0,20,0,0"></On>
-            </OnPlatform>
-        </StackLayout.Margin>
-        
-        <!-- Place new controls here -->
-        <Label x:Name="lblTitolo" Text="Welcome to BLE Client for ESP32" HorizontalOptions="Center" VerticalOptions="Start" />
-        
-        <Button x:Name="btnConnect" Text="Connect" Clicked="btnConnect_Clicked"/>
-        <Button x:Name="btnDisconnect" IsEnabled="false" Text="Disconnect" Clicked="btnDisconnect_Clicked"/>
-        <Slider x:Name="slValore" Minimum="0" Maximum="100"/>
-    </StackLayout>
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+      
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:local="clr-namespace:ESP32BLE" 
+    x:Class="ESP32BLE.MainPage"
+    Appearing="Handle_Appearing"
+    >
+    
+<!-- 
+Immagini free
+https://www.pexels.com/search/disco/ 
+
+Cloni di app famose in Xamarin
+https://www.thewissen.io/xamarin-forms-ui-spotify/
+https://www.thewissen.io/xamarin-forms-ui-runkeeper/
+https://www.thewissen.io/xamarin-forms-ui-twitter/
+-->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+                
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>-->
+
+        <Image Source="PuzzleDisconnesso.jpg" Aspect="AspectFill" />
+
+        <Label 
+            x:Name="lblTitolo" 
+            Text="BLE Client per ESP32" 
+            FontSize="23"
+            Margin="0,20,0,0"
+            HorizontalOptions="Center" VerticalOptions="StartAndExpand" 
+        />
+
+        <Button 
+            x:Name="btnConnect"
+            Text="CONNECT" 
+            Clicked="btnConnect_Clicked"
+
+            Grid.Row="1"
+            HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+            WidthRequest="200" Margin="5"
+
+            TextColor="Black" FontSize="Large" 
+            BackgroundColor="Silver" Opacity="0.7"
+            
+            BorderColor="Black" BorderWidth="0.5" CornerRadius="10"
+            />                
+    </Grid>
 </ContentPage>

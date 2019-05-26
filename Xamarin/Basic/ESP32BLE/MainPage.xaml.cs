@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*
+ESP32BLE.
+
+Esempio di utilizzo di ESP32 per una connessione BLE.
+
+Realizzato in Aprile 2019 da Maurizio Conti 
+maurizio.conti@fablabromagna.org
+
+Licenza GPLv3
+
+Testato su scheda WeMos D1 R32
+
+Usando una scheda Grove 
+- collegare un led BLU sul connettore D5
+- collegare un led ROSSO sul connettore D6
+- collegare un pulsante sul connettore D7
+
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -25,17 +45,14 @@ namespace ESP32BLE
         Guid sliderGuid = new Guid("ABCD1235-0aaa-467a-9538-01f0652c74e8");
         Guid buttonGuid = new Guid("ABCD1236-0aaa-467a-9538-01f0652c74e8");
 
-        int oldSliderValue = 0;
-
         IDisposable notifyHandler;
-        bool Pulsante = false;
 
         Color oldColor;
 
         //public ICommand cmdConnect { get; }
         //public ICommand cmdDisconnect { get; }
 
-        public MainPage( IBluetoothLowEnergyAdapter adapter )
+        public MainPage(IBluetoothLowEnergyAdapter adapter)
         {
             Adapter = adapter;
 
@@ -46,59 +63,51 @@ namespace ESP32BLE
             InitializeComponent();
             oldColor = lblTitolo.BackgroundColor;
 
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-            {
-                AggiornaStato();
-                return true; // True = Repeat again, False = Stop the timer
-            });
         }
 
-        async void AggiornaStato( )
+
+        async void btnConnect_Clicked(object sender, System.EventArgs e)
         {
-            bool connesso = false;
             try
             {
-                if (GattServer != null)
+                btnConnect.IsEnabled = false;
+                // Forza la connessione
+                if (Adapter.AdapterCanBeEnabled && Adapter.CurrentState.IsDisabledOrDisabling())
                 {
-                    connesso = GattServer.State == ConnectionState.Connected;
+                    Debug.WriteLine("Attivo adattatore.");
+                    await Adapter.EnableAdapter();
+                }
 
-                    if (connesso)
-                    {
-                        // Spedisce il valore dello slider
-                        int valore = Convert.ToInt32(slValore.Value);
-                        byte[] bufferDaSpedire = BitConverter.GetBytes(valore);
+                Debug.WriteLine("Tento la connessione.");
+                var connection = await Adapter.FindAndConnectToDevice(
+                    new ScanFilter()
+                        .SetAdvertisedDeviceName("Sensore Techno Back Brace")
+                        //.SetAdvertisedManufacturerCompanyId(0xffff)
+                        //.AddAdvertisedService(guid)
+                        ,
+                    TimeSpan.FromSeconds(10)
+                );
 
-                        var result = await GattServer.WriteCharacteristicValue(
-                            serviceGuid, sliderGuid,
-                            bufferDaSpedire
-                        );
-                    }
+
+                if (connection.IsSuccessful())
+                {
+                    await Navigation.PushModalAsync(new BLEPage(Adapter, connection));
+                }
+                else
+                {
+                    btnConnect.IsEnabled = true;
+                    DisplayAlert("Errore", "Device non trovato...", "OK");
                 }
             }
             catch (Exception errore)
             {
-                Debug.WriteLine(errore.ToString());
-            }
-            finally
-            {
-                // Aggiorna lo stato dei pulsanti
-                btnConnect.IsEnabled = !connesso;
-                btnDisconnect.IsEnabled = connesso;
-
-                // se il server è disconesso ripristina i colori originali
-                if ( !connesso )
-                    lblTitolo.BackgroundColor = oldColor;
+                DisplayAlert("Errore", errore.Message, "OK");
             }
         }
 
-        async void btnConnect_Clicked(object sender, System.EventArgs e)
+        void Handle_Appearing(object sender, System.EventArgs e)
         {
-            await Connect( true );    
-        }
-
-        async void btnDisconnect_Clicked(object sender, System.EventArgs e)
-        {
-            await Connect( false );
+            btnConnect.IsEnabled = true;
         }
 
         async Task Connect(bool connect)
@@ -132,7 +141,8 @@ namespace ESP32BLE
                         notifyHandler = GattServer.NotifyCharacteristicValue(
                            serviceGuid,
                            buttonGuid,
-                           bytes => {
+                           bytes =>
+                           {
                                // Attento. Qui può arrivarti un solo byte o due o quattro a seconda del tipo
                                // di dato che hai devinito lato ESP32...
                                // Ora lato ESP32 ho usato un uint16_t
@@ -151,7 +161,7 @@ namespace ESP32BLE
                         Debug.WriteLine(ex.ToString());
                     }
 
-
+                    #region old
                     /*
                     foreach(var sGuid in await GattServer.ListAllServices())
                     {
@@ -206,6 +216,9 @@ namespace ESP32BLE
                         }
                     }
                     */
+
+                    #endregion
+
                 }
                 else
                     Debug.WriteLine("Error connecting to device. result={0:g}", connection.ConnectionResult);

@@ -6,6 +6,8 @@ using Foundation;
 using nexus.protocols.ble;
 using nexus.core.logging;
 using UIKit;
+using Xamarin.Forms;
+using FFImageLoading.Forms.Platform;
 
 namespace ESP32BLE.iOS
 {
@@ -26,7 +28,11 @@ namespace ESP32BLE.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
+            FormsMaterial.Init();
+            CachedImageRenderer.Init();
+
             LoadApplication(new App(BluetoothLowEnergyAdapter.ObtainDefaultAdapter()));
+            UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
 
             return base.FinishedLaunching(app, options);
         }

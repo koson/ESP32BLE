@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using nexus.protocols.ble;
+using Xamarin.Forms;
 
 namespace ESP32BLE.Droid
 {
@@ -22,6 +23,8 @@ namespace ESP32BLE.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            FormsMaterial.Init(this, savedInstanceState);
 
             // If you want to enable/disable the Bluetooth adapter from code, you must call this.
             BluetoothLowEnergyAdapter.Init(this);

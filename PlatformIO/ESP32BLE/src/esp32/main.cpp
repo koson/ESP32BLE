@@ -1,18 +1,17 @@
 /*
-ESP32BLE.
+ESP32BLE
 
 Esempio di utilizzo di ESP32 per una connessione BLE.
 
-Realizzato in Aprile 2019 da Maurizio Conti 
+Realizzato in Maggio 2019 da Maurizio Conti 
 maurizio.conti@fablabromagna.org
 
-Testato su scheda WeMos D1 R32
+Licenza GPLv3
 
-Usando una scheda Grove 
-- collegare un led BLU sul connettore D5
-- collegare un led ROSSO sul connettore D6
-- collegare un pulsante connettore D7
-
+Testato su scheda WeMos D1 R32 con scheda Grove 
+- led BLU -> D5
+- led ROSSO -> D6
+- pulsante -> D7
 
 Pinout di ESP32
 https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/edit

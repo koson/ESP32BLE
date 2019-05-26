@@ -11,7 +11,7 @@ namespace ESP32BLE
         {
             InitializeComponent();
 
-            MainPage = new MainPage( adapter );
+            MainPage = new NavigationPage( new MainPage( adapter ) );
         }
 
         protected override void OnStart()
