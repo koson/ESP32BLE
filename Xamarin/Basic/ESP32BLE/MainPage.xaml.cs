@@ -1,20 +1,21 @@
 ﻿/*
-ESP32BLE.
+ESP32BLE
 
 Esempio di utilizzo di ESP32 per una connessione BLE.
 
-Realizzato in Aprile 2019 da Maurizio Conti 
+Realizzato in Maggio 2019 da Maurizio Conti
 maurizio.conti@fablabromagna.org
 
 Licenza GPLv3
 
-Testato su scheda WeMos D1 R32
+Testato su scheda WeMos D1 R32 con scheda Grove 
+- led BLU -> D5
+- led ROSSO -> D6
+- pulsante -> D7
 
-Usando una scheda Grove 
-- collegare un led BLU sul connettore D5
-- collegare un led ROSSO sul connettore D6
-- collegare un pulsante sul connettore D7
 
+Pinout di ESP32
+https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/edit
 */
 
 
@@ -160,65 +161,6 @@ namespace ESP32BLE
                     {
                         Debug.WriteLine(ex.ToString());
                     }
-
-                    #region old
-                    /*
-                    foreach(var sGuid in await GattServer.ListAllServices())
-                    {
-                        Debug.WriteLine($"service: {known.GetDescriptionOrGuid(sGuid)}");
-
-                        foreach (var cGuid in await GattServer.ListServiceCharacteristics(sGuid))
-                        {
-                            Debug.WriteLine($"characteristic: {known.GetDescriptionOrGuid(cGuid)}");
-
-                            // Memorizza i Guid
-                            serviceGuid = sGuid;
-                            charGuid = cGuid;
-
-                            try
-                            {
-                                var valueArray = await GattServer.ReadCharacteristicValue(sGuid, cGuid);
-                                var intValue = BitConverter.ToInt32(valueArray, 0);
-                                Debug.WriteLine(intValue);
-
-                                try
-                                {
-                                    // Will also stop listening when gattServer
-                                    // is disconnected, so if that is acceptable,
-                                    // you don't need to store this disposable.
-                                    notifyHandler = GattServer.NotifyCharacteristicValue(
-                                       sGuid,
-                                       cGuid,
-                                       // IObserver<Tuple<Guid, Byte[]>> or IObserver<Byte[]> or
-                                       // Action<Tuple<Guid, Byte[]>> or Action<Byte[]>
-                                       bytes => {
-                                           var intValue2 = BitConverter.ToInt32(bytes, 0);
-                                           Debug.WriteLine(intValue2);
-                                           Pulsante = intValue2 == 1 ? true : false;
-
-                                           if (Pulsante)
-                                               lblTitolo.BackgroundColor = Color.Red;
-                                           else
-                                               lblTitolo.BackgroundColor = oldColor;
-
-                                       });
-                                }
-                                catch (GattException ex)
-                                {
-                                    Debug.WriteLine(ex.ToString());
-                                }
-
-                            }
-                            catch (GattException ex)
-                            {
-                                Debug.WriteLine(ex.ToString());
-                            }
-                        }
-                    }
-                    */
-
-                    #endregion
-
                 }
                 else
                     Debug.WriteLine("Error connecting to device. result={0:g}", connection.ConnectionResult);

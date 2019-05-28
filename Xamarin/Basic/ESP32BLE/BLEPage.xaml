@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ESP32BLE
+
+Esempio di utilizzo di ESP32 per una connessione BLE.
+
+Realizzato in Maggio 2019 da Maurizio Conti 
+maurizio.conti@fablabromagna.org
+
+Licenza GPLv3
+
+Testato su scheda WeMos D1 R32 con scheda Grove 
+- led BLU -> D5
+- led ROSSO -> D6
+- pulsante -> D7
+
+
+Pinout di ESP32
+https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/edit
+
+-->
 <ContentPage
       xmlns="http://xamarin.com/schemas/2014/forms" 
       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
@@ -13,6 +34,7 @@
         <Image Source="PuzzleConnesso.jpg" Aspect="AspectFill" />
                 
         <StackLayout Grid.Row="1">
+            
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <Label x:Name="lblTitolo" 
                     Text="--" 
@@ -23,7 +45,7 @@
                     Text="*" 
                     HorizontalOptions="Center" VerticalOptions="StartAndExpand" 
                     FontSize="40" />
-                </StackLayout>
+            </StackLayout>
             
             <Switch x:Name="swESP32" 
                     VerticalOptions="StartAndExpand"

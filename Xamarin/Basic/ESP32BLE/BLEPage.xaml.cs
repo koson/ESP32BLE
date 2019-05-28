@@ -1,4 +1,25 @@
-﻿using System;
+﻿
+/*
+ESP32BLE
+
+Esempio di utilizzo di ESP32 per una connessione BLE.
+
+Realizzato in Maggio 2019 da Maurizio Conti
+maurizio.conti@fablabromagna.org
+
+Licenza GPLv3
+
+Testato su scheda WeMos D1 R32 con scheda Grove 
+- led BLU -> D5
+- led ROSSO -> D6
+- pulsante -> D7
+
+
+Pinout di ESP32
+https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/edit
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -40,7 +61,6 @@ namespace ESP32BLE
 
             InitializeComponent();
             oldColor = lblTitolo.BackgroundColor;
-
 
             Debug.WriteLine($"Connesso a {connection.GattServer.DeviceId} {connection.GattServer.Advertisement.DeviceName}");
             GattServer = connection.GattServer;

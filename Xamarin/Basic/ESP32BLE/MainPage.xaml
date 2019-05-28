@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ESP32BLE
+
+Esempio di utilizzo di ESP32 per una connessione BLE.
+
+Realizzato in Maggio 2019 da Maurizio Conti 
+maurizio.conti@fablabromagna.org
+
+Licenza GPLv3
+
+Testato su scheda WeMos D1 R32 con scheda Grove 
+- led BLU -> D5
+- led ROSSO -> D6
+- pulsante -> D7
+
+
+Pinout di ESP32
+https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/edit
+
+-->
+
 <ContentPage 
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
@@ -9,15 +31,15 @@
     Appearing="Handle_Appearing"
     >
     
-<!-- 
-Immagini free
-https://www.pexels.com/search/disco/ 
+    <!-- 
+    Immagini free
+    https://www.pexels.com/search/disco/ 
 
-Cloni di app famose in Xamarin
-https://www.thewissen.io/xamarin-forms-ui-spotify/
-https://www.thewissen.io/xamarin-forms-ui-runkeeper/
-https://www.thewissen.io/xamarin-forms-ui-twitter/
--->
+    Cloni di app famose in Xamarin
+    https://www.thewissen.io/xamarin-forms-ui-spotify/
+    https://www.thewissen.io/xamarin-forms-ui-runkeeper/
+    https://www.thewissen.io/xamarin-forms-ui-twitter/
+    -->
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,12 +47,6 @@ https://www.thewissen.io/xamarin-forms-ui-twitter/
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
                 
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>-->
-
         <Image Source="PuzzleDisconnesso.jpg" Aspect="AspectFill" />
 
         <Label 
