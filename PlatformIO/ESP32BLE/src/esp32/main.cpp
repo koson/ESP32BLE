@@ -26,17 +26,6 @@ https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/
 
 void Debounce( void );
 
-// Define per mappare i connettori Grove su ESP8266
-#define ESP_D2 16
-#define ESP_D3 5
-#define ESP_D4 4
-#define ESP_D5 0
-#define ESP_D6 2
-#define ESP_BUILTIN ESP_D6
-#define ESP_D7 14
-#define ESP_D8 12
-#define ESP_D9 13
-
 // Define per mappare i connettori Grove su ESP32
 #define ESP32_D2 26
 #define ESP32_D3 25
@@ -138,7 +127,7 @@ class ButtonValueCallbacks: public BLECharacteristicCallbacks {
 
 void setup() {
 
-  // Usaimo tre led di cui uno PWM e un pulsante 
+  // Usiamo tre led di cui uno PWM e un pulsante 
   pinMode( ESP32_BUILTIN, OUTPUT );
   pinMode( LED_ROSSO, OUTPUT );
 
@@ -146,7 +135,7 @@ void setup() {
   
   // In ESP32 analogWrite non c'è
   // Ci sono 16 canali PWM e vanno inizializzati
-  // Qui inizializzo a 5KHz/bit il canale 0
+  // Qui inizializzo a 5KHz/8bit il canale 0
   #if defined(ARDUINO_ARCH_ESP32)
 		ledcAttachPin(LED_BLU, 0);
   	ledcSetup(0, 5000, 8);
@@ -215,13 +204,14 @@ void loop() {
   // Tick!
   if ( deviceConnected ) {
     
-    // Le notifiche BLE ogni 100 mS.      
+    // Le notifiche BLE ogni 100 mS (BLE_NOTIFY_UPDATE_TIME)  
     if( millis() > prossimoTick ) {
 
-      // Tempo scaduto.
-      // Sono passati altri BLE_NOTIFY_UPDATE_TIME ms
+      // Tempo scaduto, sono passati altri BLE_NOTIFY_UPDATE_TIME ms
+      // Ricarichiamo il timer della stufa...
       prossimoTick = millis() + BLE_NOTIFY_UPDATE_TIME;
     
+      // Il led dell'ESP lo faccio blinkare per segnalare che siamo connessi...
       stato = !stato;
       digitalWrite( ESP32_BUILTIN, stato );
 
@@ -246,24 +236,6 @@ void loop() {
         Serial.println(localButtonValue);
       }
     }
-
-    /* Gestione della notifica  
-    try
-    {
-        // Inizializzazione
-        IDisposable notifyHandler = GattServer.NotifyCharacteristicValue(
-            serviceGuid, charGuid,
-            bytes => {
-                var intValue2 = BitConverter.ToInt32(bytes, 0);
-                Debug.WriteLine(intValue2);
-            });
-        
-        // Alla fine ricordarsi di chiudere tutto...
-        notifyHandler.Dispose();
-    }
-    catch (GattException ex) { Debug.WriteLine(ex.ToString()); }
-    ****/
-
   }
   else
   {
