@@ -145,19 +145,6 @@ class SliderValueCallbacks: public BLECharacteristicCallbacks {
     }
 };
 
-/*
-// Questa characteristic invece viene usata per notificare allo smartphone
-// la pressione del pulsante montato lato esp32.
-class ButtonValueCallbacks: public BLECharacteristicCallbacks {
-    void onRead(BLECharacteristic *pCharacteristic) {
-      Serial.println("Read button value");
-      digitalWrite( LED_BLU, HIGH );
-      delay(10);
-      digitalWrite( LED_BLU, LOW );
-    }
-};
-*/
-
 void setup() {
 
   // Usiamo tre led (di cui uno PWM) 
