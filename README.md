@@ -1,5 +1,6 @@
 # ESP32BLE
 Esempio di utiliizo di BLE con ESP32 e client Xamarin.Forms
+![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
 
 ## Requisiti:
 - Visual Studio 2019 community edition.
