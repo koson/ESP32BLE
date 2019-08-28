@@ -1,7 +1,7 @@
 # ESP32BLE
 Esempio di utiliizo di BLE con ESP32 e client Xamarin.Forms
 
-![](Xamarin/Basic/ESP32BLE.iOS/Resources/ScreenShot.jpg)
+![](Xamarin/Basic/ESP32BLE.iOS/Resources/ScreenShot.jpg =250x)
 
 ## Requisiti:
 - Visual Studio 2019 community edition.
