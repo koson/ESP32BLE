@@ -40,8 +40,10 @@ namespace ESP32BLE
         Guid serviceGuid = new Guid("ABCD1234-0aaa-467a-9538-01f0652c74e8");
         Guid sliderGuid = new Guid("ABCD1235-0aaa-467a-9538-01f0652c74e8");
         Guid buttonGuid = new Guid("ABCD1236-0aaa-467a-9538-01f0652c74e8");
+        Guid adcGuid = new Guid("ABCD1237-0aaa-467a-9538-01f0652c74e8");
 
-        IDisposable notifyHandler;
+        IDisposable buttonNotifyHandler;
+        IDisposable adcNotifyHandler;
 
         Color oldColor;
         int oldSliderValue = 1;
@@ -50,6 +52,9 @@ namespace ESP32BLE
         //public ICommand cmdConnect { get; }
         //public ICommand cmdDisconnect { get; }
 
+        public ESP32BLE.Models.AdcValues Valori { get; set; }
+
+        public BLEPage() { }
         public BLEPage(IBluetoothLowEnergyAdapter adapter, BlePeripheralConnectionRequest connection)
         {
             Adapter = adapter;
@@ -62,23 +67,49 @@ namespace ESP32BLE
             InitializeComponent();
             oldColor = lblTitolo.BackgroundColor;
 
+            Valori = new Models.AdcValues();
+
             Debug.WriteLine($"Connesso a {connection.GattServer.DeviceId} {connection.GattServer.Advertisement.DeviceName}");
             GattServer = connection.GattServer;
 
             try
             {
-                notifyHandler = GattServer.NotifyCharacteristicValue(
+                // Mi registro per ricevere le notifiche del bottone lato ESP32
+                buttonNotifyHandler = GattServer.NotifyCharacteristicValue(
                    serviceGuid,
                    buttonGuid,
                    bytes =>
                    {
                        // Attento. Qui può arrivarti un solo byte o due o quattro a seconda del tipo
-                       // di dato che hai devinito lato ESP32...
+                       // di dato che hai definito lato ESP32...
                        // Ora lato ESP32 ho usato un uint16_t
-                       var val = BitConverter.ToUInt16(bytes, 0);
-                       Debug.WriteLine($"{bytes.Count()} byte ({val}) da {buttonGuid}");
+                       var valuleFromESP32 = BitConverter.ToUInt16(bytes, 0);
+                       Debug.WriteLine($"{bytes.Count()} byte ({valuleFromESP32}) da {buttonGuid}");
 
-                       swESP32.IsToggled = val == 1;
+                       swESP32.IsToggled = valuleFromESP32 == 1;
+
+                   }
+                );
+
+                // Mi registro per ricevere le notifiche dell ADC lato ESP32
+                adcNotifyHandler = GattServer.NotifyCharacteristicValue(
+                   serviceGuid,
+                   adcGuid,
+                   bytes =>
+                   {
+                       // Attento. Qui può arrivarti un solo byte o due o quattro a seconda del tipo
+                       // di dato che hai definito lato ESP32...
+                       // Ora lato ESP32 ho usato un int (signed)
+                       var valuleFromESP32 = BitConverter.ToInt32(bytes, 0);
+                       Debug.WriteLine($"{bytes.Count()} byte ({valuleFromESP32}) da {adcGuid}");
+
+                       lblADCVal.Text = valuleFromESP32.ToString();
+                       Valori.Add(new Models.AdcValue { Time = DateTime.Now, Value = valuleFromESP32 });
+                       if (Valori.Count > 100)
+                           Valori.RemoveAt(0);
+
+                       chart.ItemsSource = null;
+                       chart.ItemsSource = Valori;
 
                    }
                 );
@@ -111,8 +142,8 @@ namespace ESP32BLE
             }
 
             // una volta disconnesso, meglio spegnere anche i notificatori...
-            if (notifyHandler != null)
-                notifyHandler.Dispose();
+            if (buttonNotifyHandler != null)
+                buttonNotifyHandler.Dispose();
 
             await Navigation.PopModalAsync();
         }

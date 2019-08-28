@@ -69,6 +69,9 @@
     <PackageReference Include="Xamarin.Forms.Visual.Material">
       <Version>4.0.0.425677</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfChart">
+      <Version>17.1.0.38</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

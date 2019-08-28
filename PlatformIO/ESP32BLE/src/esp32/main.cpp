@@ -24,6 +24,8 @@ https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/
 #include <BLEServer.h>
 #include <BLE2902.h>
 
+#include <driver/adc.h>
+
 void Debounce( void );
 
 // Define per mappare i connettori Grove su ESP32
@@ -46,17 +48,16 @@ void Debounce( void );
 #define DEBOUCE_TIME 10
 
 // velocità di update delle notifiche BLE
-#define BLE_NOTIFY_UPDATE_TIME 100
-
+#define TIMER_100 100
 
 bool deviceConnected = false;
 int stato = 0;
 
-unsigned long prossimoTick = 0;
+unsigned long timer100ms = 0;
+unsigned long timer1ms = 0;
 unsigned long lastDebounceTime = 0;
 
 uint8_t localSliderValue = 0;
-uint8_t localOldSliderValue = 0;
 
 uint16_t localButtonValue = 0;
 uint16_t localOldButtonValue = 0;
@@ -71,14 +72,16 @@ int lastButtonState = LOW;
 // Uno mi serve per esporre il service
 #define SERVICE_UUID "ABCD1234-0aaa-467a-9538-01f0652c74e8"
 
-// All'interno del service ho due valori che scambio tra ESP32 e cellulare
+// All'interno del service ho diversi valori che scambio tra ESP32 e cellulare
 // Ognuno di questi valori (characteristic per BLE...) ha un suo UUID (sempre inventato...)
 #define SLIDER_VALUE_UUID "ABCD1235-0aaa-467a-9538-01f0652c74e8"
 #define BUTTON_VALUE_UUID "ABCD1236-0aaa-467a-9538-01f0652c74e8"
+#define ADC_VALUE_UUID "ABCD1237-0aaa-467a-9538-01f0652c74e8"
 
 // Handler dei due valori scambiati
 BLECharacteristic *sliderCharacteristic = NULL;
 BLECharacteristic *buttonCharacteristic = NULL;
+BLECharacteristic *adcCharacteristic = NULL;
 
 // Gestione eventi server BLE
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -148,7 +151,7 @@ class SliderValueCallbacks: public BLECharacteristicCallbacks {
 void setup() {
 
   // Usiamo tre led (di cui uno PWM) 
-  pinMode( ESP32_BUILTIN, OUTPUT );
+  //pinMode( ESP32_BUILTIN, OUTPUT );
   pinMode( LED_ROSSO, OUTPUT );
 
   // e un pulsante
@@ -170,6 +173,14 @@ void setup() {
 	#else
 		pinMode(LED_BLU, OUTPUT);
 	#endif
+
+  // Configura Range 0-1023 su ADC 1
+  // Senza questa config, l'AD torna 4095-0 (contrario rispetto a 0-1023)
+  adc1_config_width(ADC_WIDTH_BIT_10);   
+
+  // Configura i canali per accettare 0-3.6V
+  //adc1_config_channel_atten( ADC1_CHANNEL_6, ADC_ATTEN_DB_11 );  //ADC_ATTEN_DB_11 = 0-3,6V
+  //adc1_config_channel_atten( ADC1_CHANNEL_0, ADC_ATTEN_DB_11 );  //ADC_ATTEN_DB_11 = 0-3,6V
 
   Serial.begin(115200);
   Serial.println("\n\nESP32 Startup");
@@ -210,6 +221,11 @@ void setup() {
       BUTTON_VALUE_UUID, 
       BLECharacteristic::PROPERTY_READ);
 
+  // Questa characteristic è di READ perchè può essere letta da remoto 
+  adcCharacteristic = pService->createCharacteristic( 
+      ADC_VALUE_UUID, 
+      BLECharacteristic::PROPERTY_READ);
+
   // Si parte!
   pService->start();
 
@@ -232,16 +248,16 @@ void loop() {
   // Tick!
   if ( deviceConnected ) {
     
-    // Le notifiche BLE ogni 100 mS (BLE_NOTIFY_UPDATE_TIME)  
-    if( millis() > prossimoTick ) {
+    // Le notifiche BLE ogni 100 mS (TIMER_100)  
+    if( millis() > timer100ms ) {
 
-      // Tempo scaduto, sono passati altri BLE_NOTIFY_UPDATE_TIME ms
+      // Tempo scaduto, sono passati altri TIMER_100 ms
       // Ricarichiamo il timer della stufa...
-      prossimoTick = millis() + BLE_NOTIFY_UPDATE_TIME;
+      timer100ms = millis() + TIMER_100;
     
       // Il led dell'ESP lo faccio blinkare per segnalare che siamo connessi...
       stato = !stato;
-      digitalWrite( ESP32_BUILTIN, stato );
+      //digitalWrite( ESP32_BUILTIN, stato );
 
       // se guardo ledState ho un toggle...
       localButtonValue = ledState == LOW ? 0 : 1;
@@ -263,6 +279,18 @@ void loop() {
         Serial.print("Bottone: ");
         Serial.println(localButtonValue);
       }
+
+      // aggiorno e notifico il valore della characteristic ADC 
+      //int millisVal = millis();
+      
+      int adcVal = adc1_get_raw( ADC1_CHANNEL_6 ); // GPIO34 - A3
+      //int adcVal = hall_sensor_read(); // Read HALL GPIO36
+      //int adcVal = hallRead(); // Read HALL
+      adcCharacteristic->setValue( adcVal );
+      adcCharacteristic->notify();
+      
+      Serial.print("A3 (GPIO34): ");
+      Serial.println(adcVal);
     }
   }
   else

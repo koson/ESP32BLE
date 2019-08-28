@@ -42,5 +42,6 @@ namespace ESP32BLE.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
+
+   }
 }

@@ -30,6 +30,7 @@ namespace ESP32BLE.iOS
 
             FormsMaterial.Init();
             CachedImageRenderer.Init();
+            Syncfusion.SfChart.XForms.iOS.Renderers.SfChartRenderer.Init();
 
             LoadApplication(new App(BluetoothLowEnergyAdapter.ObtainDefaultAdapter()));
             UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);

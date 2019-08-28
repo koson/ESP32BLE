@@ -22,12 +22,14 @@ https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/
 -->
 <ContentPage
       xmlns="http://xamarin.com/schemas/2014/forms" 
-      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"     
+      xmlns:local="clr-namespace:ESP32BLE"
+      xmlns:chart="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
       x:Class="ESP32BLE.BLEPage">
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
 
@@ -67,6 +69,43 @@ https://docs.google.com/document/d/1oocFyBbZyG31h97RjGwavDIS8yAIoPVqfHgOXjkzUbk/
                 HorizontalOptions="Center" 
                 VerticalOptions="StartAndExpand"
             />
+
+            <Label x:Name="lblADCVal"
+                Text="0"                
+                
+                FontSize="30" 
+                HorizontalOptions="Center" 
+                VerticalOptions="StartAndExpand"
+            />
+                    
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="200"></RowDefinition></Grid.RowDefinitions>
+
+                <chart:SfChart>
+                    
+                    <chart:SfChart.PrimaryAxis>
+                        <chart:CategoryAxis>
+                            <chart:CategoryAxis.Title>
+                                <chart:ChartAxisTitle Text="Time"> </chart:ChartAxisTitle>
+                            </chart:CategoryAxis.Title>
+                         </chart:CategoryAxis>
+                    </chart:SfChart.PrimaryAxis>
+
+                    <chart:SfChart.SecondaryAxis>
+                        <chart:NumericalAxis Minimum="0" Maximum="1023">
+                            <chart:NumericalAxis.Title>
+                                <chart:ChartAxisTitle Text="ADC"></chart:ChartAxisTitle>
+                            </chart:NumericalAxis.Title>      
+                        </chart:NumericalAxis>   
+                    </chart:SfChart.SecondaryAxis>
+                    
+                    <chart:SfChart.Series>
+                        <chart:FastLineSeries x:Name="chart" XBindingPath="Time" YBindingPath="Value"/>
+                    </chart:SfChart.Series>
+
+                </chart:SfChart>
+            
+            </Grid>
             
             <Button 
                 Text="DISCONNECT" 

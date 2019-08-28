@@ -72,6 +72,7 @@ namespace ESP32BLE
             try
             {
                 btnConnect.IsEnabled = false;
+
                 // Forza la connessione
                 if (Adapter.AdapterCanBeEnabled && Adapter.CurrentState.IsDisabledOrDisabling())
                 {
