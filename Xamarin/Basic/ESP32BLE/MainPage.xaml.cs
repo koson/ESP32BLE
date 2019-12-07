@@ -97,9 +97,9 @@ namespace ESP32BLE
                 }
                 else
                 {
-                    btnConnect.IsEnabled = true;
                     await DisplayAlert("Errore", "Device non trovato...", "OK");
                 }
+                btnConnect.IsEnabled = true;
             }
             catch (Exception errore)
             {
