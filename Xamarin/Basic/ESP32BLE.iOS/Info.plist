@@ -34,5 +34,7 @@
 	<string>ESP32BLE</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Posso usare Bluetooth?</string>
 </dict>
 </plist>
